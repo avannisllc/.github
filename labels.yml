@@ -1,0 +1,39 @@
+- name: parent
+  color: 132749
+  description: Top-level Issue with child Issues underneath
+
+- name: follow-up
+  color: e7e7e7
+  description: Spinoff from another Issue, independent execution
+
+- name: source:engineering
+  color: 0493FC
+  description: Originated from engineering, not customer or strategic
+
+- name: source:salesforce
+  color: CB2B81
+  description: Originated from engineering, not customer or strategic
+ - name: source:rock
+  color: FFAA00
+  description: Originated from an EOS Rock
+
+- name: customer-visible
+  color: ffffff
+  description: Changes that internal or external users will notice
+
+- name: cto-review
+  color: b60205
+  description: Requires CTO review before merge
+
+- name: good-while-waiting
+  color: 0e8a16
+  description: Small chore safe to pick up while waiting on review
+
+- name: size:S
+  color: c2e0c6
+- name: size:M
+  color: fef2c0
+- name: size:L
+  color: f9d0c4
+- name: size:XL
+  color: e99695
