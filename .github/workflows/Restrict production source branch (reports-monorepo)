@@ -1,0 +1,21 @@
+  name: Restrict production source branch (reports-monorepo)
+
+  on:
+    pull_request:
+      branches:
+        - main
+        - master
+        - production
+
+  jobs:
+    enforce-source:
+      if: github.event.repository.name == 'reports-monorepo'
+      runs-on: ubuntu-latest
+      steps:
+        - name: Verify PR source is dev
+          run: |
+            if [[ "${{ github.head_ref }}" != "dev" ]]; then
+              echo "::error::PRs into '${{ github.base_ref }}' in reports-monorepo must come from 'dev'. This PR is from '${{ github.head_ref }}'."
+              exit 1
+            fi
+            echo "Source 'dev' → target '${{ github.base_ref }}' in reports-monorepo — OK."
