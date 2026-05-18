@@ -1,0 +1,21 @@
+# .github/workflows/restrict-production-source.yml
+name: Restrict production source branch
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+      - production
+
+jobs:
+  enforce-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PR source is candidate
+        run: |
+          if [[ "${{ github.head_ref }}" != "candidate" ]]; then
+            echo "::error::PRs into '${{ github.base_ref }}' must come from 'candidate'. This PR is from '${{ github.head_ref }}'."
+            exit 1
+          fi
+          echo "Source 'candidate' → target '${{ github.base_ref }}' — OK."
