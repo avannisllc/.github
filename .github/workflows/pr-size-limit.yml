@@ -1,0 +1,45 @@
+# .github/workflows/pr-size-limit.yml
+name: PR size limit
+
+on:
+  pull_request:
+    branches:
+      - candidate
+
+jobs:
+  check-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate PR size (excluding tests, markdown, lockfiles)
+        id: size
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+
+          # Files excluded from the count:
+          # - Markdown (*.md)
+          # - Test files across common languages (JS/TS, Go, Python, Ruby, Java/Kotlin/C#, PHP)
+          # - Anything under test/, tests/, __tests__/, spec/, specs/ directories
+          # - Lockfiles (package-lock, yarn.lock, composer.lock, etc.) — these can explode line counts on a single dep bump
+          EXCLUDE='(\.md$|(^|/)(test|tests|__tests__|spec|specs)/|\.(test|spec)\.(js|jsx|ts|tsx|mjs|cjs)$|_test\.(go|py|rb)$|(^|/)test_[^/]*\.py$|_spec\.rb$|Test[s]?\.(java|kt|cs|php)$|package-lock\.json$|yarn\.lock$|pnpm-lock\.yaml$|Gemfile\.lock$|poetry\.lock$|Pipfile\.lock$|Cargo\.lock$|go\.sum$|composer\.lock$)'
+
+          TOTAL=$(git diff --numstat "$BASE" "$HEAD" \
+            | grep -vE "$EXCLUDE" \
+            | awk '{ if ($1 != "-") a += $1 } END { print a + 0 }')
+
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "PR changes $TOTAL lines (excluding tests, markdown, lockfiles)"
+
+      - name: Enforce 2000-line limit
+        run: |
+          TOTAL=${{ steps.size.outputs.total }}
+          LIMIT=2000
+          if (( TOTAL > LIMIT )); then
+            echo "::error::This PR changes $TOTAL additions (excluding tests, markdown, lockfiles), exceeding the $LIMIT-line limit. Please split it into smaller PRs."
+            exit 1
+          fi
+          echo "PR size: $TOTAL / $LIMIT lines — OK"
