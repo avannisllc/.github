@@ -1,39 +1,64 @@
-- name: parent
+- name: type:parent
   color: 132749
   description: Top-level Issue with child Issues underneath
-
-- name: follow-up
-  color: e7e7e7
+- name: type:child
+  color: 87CEEB
+  description: Child of a top-level Issue
+- name: type:follow-up
+  color: d4c5f9
   description: Spinoff from another Issue, independent execution
 
 - name: source:engineering
   color: 0493FC
   description: Originated from engineering, not customer or strategic
-
 - name: source:salesforce
   color: CB2B81
-  description: Originated from engineering, not customer or strategic
- - name: source:rock
+  description: Originated from a Salesforce request
+- name: source:rock
   color: FFAA00
   description: Originated from an EOS Rock
 
 - name: customer-visible
   color: ffffff
   description: Changes that internal or external users will notice
-
 - name: cto-review
   color: b60205
   description: Requires CTO review before merge
-
 - name: good-while-waiting
   color: 0e8a16
   description: Small chore safe to pick up while waiting on review
+- name: needs:refinement
+  color: fbca04
+  description: Cannot be sized or started until refined
 
-- name: size:S
+- name: size:<5
   color: c2e0c6
-- name: size:M
+- name: size:5
+  color: bfdadc
+- name: size:8
   color: fef2c0
-- name: size:L
+- name: size:13
   color: f9d0c4
-- name: size:XL
+- name: size:21
   color: e99695
+- name: size:>21
+  color: 333333
+
+- name: status:backlog
+  color: ededed
+  description: Not yet started; available to be picked up
+- name: status:ready
+  color: bfdadc
+  description: Refined and ready for a developer to claim
+- name: status:in-progress
+  color: 1d76db
+  description: Actively being worked on
+- name: status:in-review
+  color: 5319e7
+  description: PR open and awaiting code review
+- name: status:blocked
+  color: b60205
+  description: Cannot proceed; see comments for blocker
+- name: status:on-hold
+  color: 666666
+  description: Intentionally paused; not blocked, just deprioritized
